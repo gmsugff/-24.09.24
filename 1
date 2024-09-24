@@ -1,0 +1,204 @@
+ using System;
+    using System.Collections.Generic;
+namespace _24._09._24p32bx
+{
+
+
+    /// <summary>
+    /// Интерфейс для части дома
+    /// </summary>
+    public interface IPart
+    {
+        
+        string GetName();
+    }
+    /// <summary>
+    /// Интерфейс для рабочего
+    /// </summary>
+    public interface IWorker
+    {
+       
+       
+        void Work(IPart part);
+    }
+
+    /// <summary>
+    /// Класс для дома
+    /// </summary>
+    public class House : IPart
+    {
+        /// <summary>
+        /// Возвращает название дома
+        /// </summary>
+        
+        public string GetName() { return "House"; }
+
+        /// <summary>
+        /// Список частей дома
+        /// </summary>
+        public List<IPart> Parts { get; set; }
+
+        /// <summary>
+        /// Конструктор для дома
+        /// </summary>
+        public House()
+        {
+            Parts = new List<IPart>();
+        }
+    }
+    /// <summary>
+    /// Класс для фундамента
+    /// </summary>
+    public class Basement : IPart
+    {
+        public string GetName() { return "Basement"; }
+    }
+    /// <summary>
+    /// Класс для стен
+    /// </summary>
+    public class Walls : IPart
+    {
+        public string GetName() { return "Walls"; }
+    }
+    /// <summary>
+    /// Класс для двери
+    /// </summary>
+    public class Door : IPart
+    {
+        public string GetName() { return "Door"; }
+    }
+    /// <summary>
+    /// Класс для окна
+    /// </summary>
+    public class Window : IPart
+    {
+        public string GetName() { return "Window"; }
+    }
+    /// <summary>
+    /// Класс для крыши
+    /// </summary>
+    public class Roof : IPart
+    {
+        public string GetName() { return "Roof"; }
+    }
+    /// <summary>
+    /// Класс для крыши
+    /// </summary>
+    public class Worker : IWorker
+    {
+        public void Work(IPart part)
+        {
+            Console.WriteLine($"Worker is working on {part.GetName()}");
+        }
+    }
+    /// <summary>
+    /// Класс для бригадира
+    /// </summary>
+    public class TeamLeader : IWorker
+    {
+        public void Work(IPart part)
+        {
+            Console.WriteLine($"Team Leader is reporting on {part.GetName()}");
+        }
+    }
+    /// <summary>
+    /// Класс для бригады
+    /// </summary>
+    public class Team
+    {
+        /// <summary>
+        /// Список рабочих
+        /// </summary>
+        private List<IWorker> workers;
+        /// <summary>
+        /// Дом
+        /// </summary>
+        private House house;
+        /// <summary>
+        /// Конструктор для бригады
+        /// </summary>
+        public Team(House house)
+        {
+            workers = new List<IWorker>();
+            this.house = house;
+        }
+        /// <summary>
+        /// Добавляет рабочего в бригаду
+        /// </summary>
+        public void AddWorker(IWorker worker)
+        {
+            workers.Add(worker);
+        }
+        /// <summary>
+        /// Строит дом
+        /// </summary>
+        public void BuildHouse()
+        {
+            foreach (var worker in workers)
+            {
+                if (house.Parts.Count == 0)
+                {
+                    worker.Work(new Basement());
+                    house.Parts.Add(new Basement());
+                }
+                else if (house.Parts.Count < 5)
+                {
+                    worker.Work(new Walls());
+                    house.Parts.Add(new Walls());
+                }
+                else if (house.Parts.Count == 5)
+                {
+                    worker.Work(new Door());
+                    house.Parts.Add(new Door());
+                }
+                else if (house.Parts.Count < 9)
+                {
+                    worker.Work(new Window());
+                    house.Parts.Add(new Window());
+                }
+                else if (house.Parts.Count == 9)
+                {
+                    worker.Work(new Roof());
+                    house.Parts.Add(new Roof());
+                }
+            }
+        }
+        /// <summary>
+        /// Создает отчет о строительстве дома
+        /// </summary>
+        public void Report()
+        {
+            Console.WriteLine("House construction report:");
+            foreach (var part in house.Parts)
+            {
+                Console.WriteLine($"  {part.GetName()}");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            House house = new House();
+            Team team = new Team(house);
+            team.AddWorker(new Worker());
+            team.AddWorker(new TeamLeader());
+
+            team.BuildHouse();
+            team.Report();
+
+            Console.WriteLine("House construction completed!");
+            Console.WriteLine("Here is the house:");
+            Console.WriteLine("  _______");
+            Console.WriteLine(" /      \\");
+            Console.WriteLine("/        \\");
+            Console.WriteLine("|   __    |");
+            Console.WriteLine("|  /  \\   |");
+            Console.WriteLine("| /    \\  |");
+            Console.WriteLine("| |  | |  |");
+            Console.WriteLine("| |__| |__|");
+            Console.WriteLine("|_________|");
+        }
+    }
+}
